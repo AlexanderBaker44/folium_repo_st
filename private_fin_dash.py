@@ -9,6 +9,7 @@ import branca
 from streamlit_folium import st_folium
 from folium.features import GeoJsonPopup, GeoJsonTooltip
 
+#renderng glitch has to do with tabs
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
 df = pd.read_csv('data/preprocessed_funding.csv')
@@ -24,14 +25,30 @@ company_list = list(set(df['Company']))
 #continent_list = list(set(filtered_geo['continent']))
 
 
+metric_dict = {'Count':'count', 'Amount in Millions':'amount_usd'}
+cont_dict = {
+'World': [[-50.003431,-175.781123],[78.091047,188.676738]],
+'North America': [[-2.600651,-130.909825],[69.778954,-63.856951]],
+#'South America': [[-58.704332,-89.218864],[9.726405,-28.006829]],
+'Africa': [[-37.020096,-15.406895],[36.738886,40.176447]],
+'Europe': [[33.049188,-21.598470],[70.104502,49.111984]],
+'Asia': [[7.536767,32.480595],[54.876608,150.260988]],
+'Oceania': [[-41.692597,96.366250],[6.070650,187.128922]]
+}
+
+
+continent_list = list(cont_dict.keys())
+
 
 metric_dict = {'Count':'count', 'Amount in Millions':'amount_usd'}
 
+with st.sidebar:
+    page  = st.radio('Choose Page', ('General', 'Company Overview', 'Geographic'))
 #tabs general, geographic, single companies
-tab1,tab2,tab3 = st.tabs(['General','Company Overview','Geographic'])
+#tab1,tab2,tab3 = st.tabs(['General','Company Overview','Geographic'])
 
 #general metrics count and total
-with tab1:
+if page == 'General':
     st.header('General Financial Analysis')
     selected_metric_m = st.selectbox(label = 'Select Metric',options = ['Count','Amount in Millions'])
     selected_metric = metric_dict[selected_metric_m]
@@ -111,7 +128,7 @@ with tab1:
 
 #selected_metric = st.dropdown()
 
-with tab2:
+if page == 'Company Overview':
     st.header('Company Overview')
     selected_companies = st.multiselect('Select Companies to Analyze', company_list,[company_list[0]])
     filtered_df = df[df['Company'].isin(selected_companies)]
@@ -133,25 +150,18 @@ with tab2:
     else:
         st.write('Please Select a Company')
 
-with tab3:
-    metric_dict = {'Count':'count', 'Amount in Millions':'amount_usd'}
-    cont_dict = {
-    'World': [[-50.003431,-175.781123],[78.091047,188.676738]],
-    'North America': [[-2.600651,-130.909825],[69.778954,-63.856951]],
-    #'South America': [[-58.704332,-89.218864],[9.726405,-28.006829]],
-    'Africa': [[-37.020096,-15.406895],[36.738886,40.176447]],
-    'Europe': [[33.049188,-21.598470],[70.104502,49.111984]],
-    'Asia': [[7.536767,32.480595],[54.876608,150.260988]],
-    'Oceania': [[-41.692597,96.366250],[6.070650,187.128922]]
-    }
+if page  == 'Geographic':
 
-    continent_list = list(cont_dict.keys())
+
     st.header('Geography Dashboard')
-    metric_name = st.selectbox(label = 'Select Geographic Metric',options = ['Count','Amount in Millions'])
+    metric_name = st.selectbox(label = 'Select Geographic Metric',options = ['Count','Amount in Millions'], index = 1)
     metric = metric_dict[metric_name]
     selected_continent =  st.selectbox('Select Geographic Body to Analyze', options = continent_list)
-    st.subheader('Map')
     m = folium.Map()
+    st.subheader('Map')
+    #print(selected_continent)
+    m.fit_bounds(cont_dict[selected_continent])
+
     if selected_continent == 'World':
         fcdf = df_geo
     else:
@@ -206,8 +216,8 @@ with tab3:
     m.fit_bounds(cont_dict[selected_continent])
 
 
-    st_folium(m, height = 400, width=700)
 
+    st_data = st_folium(m, height = 400, width=700)
     df_bar = fcdf[['name',metric]].dropna().sort_values(metric ,ascending = False)
 
     st.subheader('Numerical Comparison')
