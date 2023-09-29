@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import geopandas as gpd
 import plotly.express as px
-from folium_mapping_sample import df_geo, create_map, cont_dict, continent_list
+#from folium_mapping_sample import df_geo, create_map, cont_dict, continent_list
 import folium
 import branca
 from streamlit_folium import st_folium
@@ -18,7 +18,7 @@ ddf['Month'] = pd.to_datetime(ddf['Month'])
 
 #df_geo = gpd.read_file("data/edited_geo_df.shp")
 #print(df_geo)
-
+df_geo = gpd.read_file("data/edited_geo_df.shp")
 filtered_geo = df_geo.dropna(subset = ['amount_usd'])
 company_list = list(set(df['Company']))
 #continent_list = list(set(filtered_geo['continent']))
@@ -134,6 +134,7 @@ with tab2:
         st.write('Please Select a Company')
 
 with tab3:
+    metric_dict = {'Count':'count', 'Amount in Millions':'amount_usd'}
     cont_dict = {
     'World': [[-50.003431,-175.781123],[78.091047,188.676738]],
     'North America': [[-2.600651,-130.909825],[69.778954,-63.856951]],
@@ -143,10 +144,11 @@ with tab3:
     'Asia': [[7.536767,32.480595],[54.876608,150.260988]],
     'Oceania': [[-41.692597,96.366250],[6.070650,187.128922]]
     }
+
     continent_list = list(cont_dict.keys())
     st.header('Geography Dashboard')
     metric_name = st.selectbox(label = 'Select Geographic Metric',options = ['Count','Amount in Millions'])
-    metric = metric_dict[selected_metric_m]
+    metric = metric_dict[metric_name]
     selected_continent =  st.selectbox('Select Geographic Body to Analyze', options = continent_list)
     st.subheader('Map')
     m = folium.Map()
@@ -162,7 +164,7 @@ with tab3:
         caption=metric_name,
     )
     popup = GeoJsonPopup(
-        fields=["name", "amount_usd"],
+        fields=["name", metric],
         aliases=["Country: ", metric_name],
         localize=True,
         labels=True,
@@ -206,7 +208,7 @@ with tab3:
 
     st_folium(m, height = 400, width=700)
 
-    df_bar = fcdf[['name',metric]].dropna().sort_values(metric,ascending = False)
+    df_bar = fcdf[['name',metric]].dropna().sort_values(metric ,ascending = False)
 
     st.subheader('Numerical Comparison')
     fig = px.bar(df_bar, x = 'name', y = metric,height=400, width = 700)
