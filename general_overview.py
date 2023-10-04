@@ -24,7 +24,7 @@ def general_overview_page(metric_dict, df):
 
     elif selected_metric_m == 'Amount in Millions USD':
         #print(selected_metric_m)
-        time_investor = ddf.dropna().groupby('Month').sum()['amount_usd']
+        time_investor = df.dropna().groupby('Month').sum()['amount_usd']
         print(time_investor)
         by_type = df[['Major Category','amount_usd']].groupby('Major Category').sum().sort_values('amount_usd',ascending=False)['amount_usd']
         by_sector = df[['Subcategory','amount_usd']].groupby('Subcategory').sum().sort_values('amount_usd',ascending=False)['amount_usd']

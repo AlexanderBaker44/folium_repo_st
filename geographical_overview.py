@@ -13,7 +13,7 @@ from folium.features import GeoJsonPopup, GeoJsonTooltip
 
 def geographical_page(df_geo, metric_dict,continent_list, cont_dict):
     st.header('Geography Dashboard')
-    metric_name = st.selectbox(label = 'Select Geographic Metric',options = ['Number of Investments','Amount in Millions USD'], index = 1)
+    metric_name = st.selectbox(label = 'Select Geographic Metric',options = ['Number of Investments','Amount in Millions USD'])
     metric = metric_dict[metric_name]
     selected_continent =  st.selectbox('Select Geographic Body to Analyze', options = continent_list)
     m = folium.Map()
@@ -87,6 +87,9 @@ def geographical_page(df_geo, metric_dict,continent_list, cont_dict):
     elif len(df_bar['name']) == 1:
         cont_val = list(df_bar[metric])[0]
         name_cont = list(df_bar['name'])[0]
-        st.markdown(f'#### The company {name_cont} has {cont_val} million USD.')
+        if metric == 'amount_usd':
+            st.markdown(f'#### The country {name_cont} has {cont_val} invested in millions USD.')
+        elif metric == 'count':
+            st.markdown(f'#### The country {name_cont} has an investment count of {cont_val}.')
     else:
         st.write('Continent has no relevant investments.')

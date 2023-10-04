@@ -6,6 +6,7 @@ import plotly.express as px
 from general_overview import general_overview_page
 from company_overview import company_overview_page
 from geographical_overview import geographical_page
+from entry_page import entry_page_func
 #new comment
 #from folium_mapping_sample import df_geo, create_map, cont_dict, continent_list
 import folium
@@ -47,11 +48,14 @@ continent_list = list(cont_dict.keys())
 metric_dict = {'Number of Investments':'count', 'Amount in Millions USD':'amount_usd'}
 
 with st.sidebar:
-    page  = st.radio('Choose Page', ('General', 'Company Overview', 'Geographic'))
+    page  = st.radio('Choose Page', ('Entry Page','General', 'Company Overview', 'Geographic'))
 #tabs general, geographic, single companies
 #tab1,tab2,tab3 = st.tabs(['General','Company Overview','Geographic'])
 
 #general metrics count and total
+if page == 'Entry Page':
+    entry_page_func()
+
 if page == 'General':
     general_overview_page(metric_dict, df)
 
