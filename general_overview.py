@@ -39,7 +39,7 @@ def general_overview_page(metric_dict, df):
     #figt, mnxt = plt.subplots(1, 1)
     #time_investor.plot(kind = 'line', figsize = (20,10), title = 'Investments Made Over Time', ylabel = f'{selected_metric_m}')
     #st.pyplot()
-    fig = px.line(time_investor, x = time_investor.index, y = selected_metric_s,height=400, width = 800)
+    fig = px.line(time_investor, x = time_investor.index, y = selected_metric_s,height=400, width = 700)
     fig.update_layout(title='Time Analysis', yaxis_title=selected_metric_m, xaxis_title='month')
     st.plotly_chart(fig)
 
@@ -50,7 +50,7 @@ def general_overview_page(metric_dict, df):
         #figmx, mnx = plt.subplots(1, 1)
         #by_type.plot(ax = mnx, kind = 'bar',title = 'Investments by Category', ylabel = f'{selected_metric_m}')
         #st.pyplot()
-        fig = px.bar(by_type, x = by_type.index, y = selected_metric_s,height=400, width = 400)
+        fig = px.bar(by_type, x = by_type.index, y = selected_metric_s,height=400, width = 350)
         fig.update_layout(title='Category', yaxis_title=selected_metric_m, xaxis_title='category')
         st.plotly_chart(fig)
 
@@ -58,7 +58,7 @@ def general_overview_page(metric_dict, df):
         #figmxv, mnxv = plt.subplots(1, 1)
         #by_sector.plot(ax = mnxv, kind = 'bar',title = 'Investments by Subcategory', ylabel = f'{selected_metric_m}')
         #st.pyplot()
-        fig = px.bar(by_sector, x = by_sector.index, y = selected_metric_s, height=400, width = 400)
+        fig = px.bar(by_sector, x = by_sector.index, y = selected_metric_s, height=400, width = 350)
         fig.update_layout(title='Subcategory', yaxis_title=selected_metric_m, xaxis_title='subcategory')
         st.plotly_chart(fig)
 
@@ -67,12 +67,12 @@ def general_overview_page(metric_dict, df):
     with col1:
         #by_sector_s.plot(kind = 'bar',title = 'Investments by Stage', ylabel = f'{selected_metric_m}')
         #st.pyplot()
-        fig = px.bar(by_sector_s, x = by_sector_s.index, y = selected_metric_s, height=400, width = 400)
+        fig = px.bar(by_sector_s, x = by_sector_s.index, y = selected_metric_s, height=400, width = 350)
         fig.update_layout(title='Stage', yaxis_title=selected_metric_m, xaxis_title='stage')
         st.plotly_chart(fig)
     with col2:
         #by_type_s.plot(kind = 'bar',title = 'If Investment is Strategic', ylabel = f'{selected_metric_m}')
         #st.pyplot()
-        fig = px.bar(by_type_s, x = by_type_s.index, y = selected_metric_s, height=400, width = 400)
+        fig = px.bar(by_type_s, x = by_type_s.index, y = selected_metric_s, height=400, width = 350)
         fig.update_layout(title='Strategics', yaxis_title=selected_metric_m, xaxis_title='strategics')
         st.plotly_chart(fig)
