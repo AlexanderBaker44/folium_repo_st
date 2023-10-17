@@ -18,12 +18,12 @@ def company_overview_page(df, company_list):
         if len(fgdf['amount_usd']) > 1:
             #fgdf['amount_usd'].plot(kind = 'bar', ylabel = 'Amount in Millions')
             #st.pyplot()
-            fig = px.bar(fgdf, x = fgdf.index, y = 'amount_usd',height=400, width = 800)
+            fig = px.bar(fgdf, x = fgdf.index, y = 'amount_usd',height=400, width = 700)
             fig.update_layout(title='Amount of Investments per Company', yaxis_title='Amount in Millions USD', xaxis_title='category')
             st.plotly_chart(fig)
         elif len(fgdf['amount_usd']) == 1:
             comp_val = list(fgdf['amount_usd'])[0]
-            st.markdown(f'#### The company {list(fgdf.index)[0]} has {comp_val} million USD.')
+            st.subheader(f':blue[The company {list(fgdf.index)[0]} has {comp_val} million USD.]')
         else:
             st.write('There is no investment amount found for the selected company')
     else:

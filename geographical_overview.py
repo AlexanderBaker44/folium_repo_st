@@ -88,8 +88,8 @@ def geographical_page(df_geo, metric_dict,continent_list, cont_dict):
         cont_val = list(df_bar[metric])[0]
         name_cont = list(df_bar['name'])[0]
         if metric == 'amount_usd':
-            st.markdown(f'#### The country {name_cont} has {cont_val} invested in millions USD.')
+            st.subheader(f':blue[The country {name_cont} has {cont_val} invested in millions USD.]')
         elif metric == 'count':
-            st.markdown(f'#### The country {name_cont} has an investment count of {cont_val}.')
+            st.subheader(f':blue[The country {name_cont} has an investment count of {int(cont_val)}.]')
     else:
         st.write('Continent has no relevant investments.')
