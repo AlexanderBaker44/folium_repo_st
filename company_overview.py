@@ -9,18 +9,23 @@ def company_overview_page(df, company_list):
     st.header('Company Overview')
     selected_companies = st.multiselect('Select Companies to Analyze', company_list,[company_list[0]])
     filtered_df = df[df['Company'].isin(selected_companies)]
-    comp_list = list(filtered_df['edited_names'])
+    comp_list = filtered_df['edited_names']
     if filtered_df.empty == False:
         st.subheader('Company Investors')
         lgdf = filtered_df.groupby('Company').agg({'Lead Investor': lambda x: list(x)[0],'Other Investor': lambda x: list(set(x))[0]})
         st.table(lgdf)
         related = []
         for i,k in enumerate(comp_list):
-            for j,l in enumerate(list(df_posts['post_name'])):
+            for j,l in enumerate(df_posts['post_name']):
                 if str(k) in str(l):
-                    related.append(j)
+                    related.append(l)
+
         st.subheader('Related Articles')
-        st.table(df_posts[df_posts['ID'].isin(related)][['post_name','guid']])
+        related_arts = df_posts[df_posts['post_name'].isin(related)][['post_name','guid']]
+        if related_arts.empty:
+            st.write('No articles related to this company')
+        else:
+            st.table(related_arts)
 
         st.subheader('Investment Amount in Millions USD')
         fgdf = filtered_df[['Company','amount_usd','Country']].groupby(['Company']).sum()
