@@ -25,7 +25,11 @@ def company_overview_page(df, company_list):
         if related_arts.empty:
             st.write('No articles related to this company')
         else:
-            st.table(related_arts)
+            markdowntable = "| Syntax | Description |\n| - | - |"
+            for i,j in zip(related_arts['post_name'],related_arts['guid']):
+                if '.jpg' not in j:
+                    markdowntable += f'\n| {i} | {j} |'
+            st.markdown(markdowntable)
 
         st.subheader('Investment Amount in Millions USD')
         fgdf = filtered_df[['Company','amount_usd','Country']].groupby(['Company']).sum()
