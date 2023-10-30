@@ -5,7 +5,7 @@ import geopandas as gpd
 import plotly.express as px
 
 def company_overview_page(df, company_list):
-    df_posts = pd.read_csv('data/wpru_posts.csv')
+    df_posts = pd.read_csv('data/combined_values.csv')
     st.header('Company Overview')
     selected_companies = st.multiselect('Select Companies to Analyze', company_list,[company_list[0]])
     filtered_df = df[df['Company'].isin(selected_companies)]
@@ -16,20 +16,9 @@ def company_overview_page(df, company_list):
         st.table(lgdf)
         related = []
         for i,k in enumerate(comp_list):
-            for j,l in enumerate(df_posts['post_name']):
-                if str(k) in str(l):
-                    related.append(l)
-
-        st.subheader('Related Articles')
-        related_arts = df_posts[df_posts['post_name'].isin(related)][['post_name','guid']]
-        if related_arts.empty:
-            st.write('No articles related to this company')
-        else:
-            markdowntable = "| Syntax | Description |\n| - | - |"
-            for i,j in zip(related_arts['post_name'],related_arts['guid']):
-                if '.jpg' not in j:
-                    markdowntable += f'\n| {i} | {j} |'
-            st.markdown(markdowntable)
+            for j,l in zip(df_posts['post_name'],df_posts['slug']):
+                if str(k) in str(l) or str(k) in str(j):
+                    related.append(j)
 
         st.subheader('Investment Amount in Millions USD')
         fgdf = filtered_df[['Company','amount_usd','Country']].groupby(['Company']).sum()
@@ -44,5 +33,18 @@ def company_overview_page(df, company_list):
             st.subheader(f':blue[The company {list(fgdf.index)[0]} has {comp_val} million USD.]')
         else:
             st.write('There is no investment amount found for the selected company')
+
+        st.subheader('Related Articles')
+        related_arts = df_posts[df_posts['post_name'].isin(related)][['post_title','post_name','guid']].sort_values('post_title')
+        if related_arts.empty:
+            st.write('No articles related to this company')
+        else:
+            markdowntable = "| Article | Link |\n| - | - |"
+            for i,j in zip(related_arts['post_title'],related_arts['guid']):
+                if '.jpg' not in j and '.png' not in j:
+                    markdowntable += f'\n| {i} | {j} |'
+            st.markdown(markdowntable)
+
+
     else:
         st.write('Please Select a Company')
