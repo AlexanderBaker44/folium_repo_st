@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import geopandas as gpd
 import plotly.express as px
+import ast
 
 def company_overview_page(df, company_list):
     df_posts = pd.read_csv('data/combined_values.csv')
@@ -35,14 +36,18 @@ def company_overview_page(df, company_list):
             st.write('There is no investment amount found for the selected company')
 
         st.subheader('Related Articles')
-        related_arts = df_posts[df_posts['post_name'].isin(related)][['post_title','post_name','guid']].sort_values('post_title')
+        related_arts = df_posts[df_posts['post_name'].isin(related)][['post_title','post_name','guid','slug']].sort_values('post_title')
         if related_arts.empty:
             st.write('No articles related to this company')
         else:
-            markdowntable = "| Article | Link |\n| - | - |"
-            for i,j in zip(related_arts['post_title'],related_arts['guid']):
+            markdowntable = "| Article | Link | Company |\n| - | - | - |"
+            for i,j,k,l in zip(related_arts['post_title'],related_arts['guid'],related_arts['slug'],related_arts['post_name']):
                 if '.jpg' not in j and '.png' not in j:
-                    markdowntable += f'\n| {i} | {j} |'
+                    if str(k) != 'nan':
+                        comp = [a for a in ast.literal_eval(str(k)) if a in list(comp_list)]
+                    if comp == []:
+                        comp = [b for b in list(comp_list) if b in l]
+                    markdowntable += f'\n| {i} | {j} | {comp[0]} |'
             st.markdown(markdowntable)
 
 
