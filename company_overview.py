@@ -42,7 +42,7 @@ def company_overview_page(df, company_list):
         else:
             markdowntable = "| Article | Link | Company |\n| - | - | - |"
             for i,j,k,l in zip(related_arts['post_title'],related_arts['guid'],related_arts['slug'],related_arts['post_name']):
-                if '.jpg' not in j and '.png' not in j:
+                if '.jpg' not in j and '.png' not in j and '.jpeg' not in j:
                     if str(k) != 'nan':
                         comp = [a for a in ast.literal_eval(str(k)) if a in list(comp_list)]
                     if comp == []:
