@@ -3,8 +3,6 @@ import streamlit as st
 def entry_page_func():
     st.header("Space Intel Report Financials Dashboard")
     st.write('')
-    st.image('spaceintel_logo.png', width = 400)
-    st.image('sat_image.jpg', width = 400)
     st.subheader('Dashboard Overview')
     st.markdown(
                 '''
